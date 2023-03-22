@@ -2,12 +2,11 @@ package jade;
 
 import org.lwjgl.opengl.GL;
 
-import renderer.DebugDraw;
-import renderer.Framebuffer;
-import renderer.PickingTexture;
+import renderer.*;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
+import util.AssetPool;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -137,10 +136,10 @@ public class Window {
         this.imguiLayer = new ImGuiLayer(glfwWindow);
         this.imguiLayer.initImGui();
         
-        this.framebuffer = new Framebuffer(3840, 2160);
-        this.pickingTexture = new PickingTexture(3840, 2160);
+        this.framebuffer = new Framebuffer(3840, 1080);
+        this.pickingTexture = new PickingTexture(3840, 1080);
         
-        glViewport(0, 0, 3840, 2160);
+        glViewport(0, 0, 3840, 1080);
 
         Window.changeScene(0);
 
@@ -151,9 +150,34 @@ public class Window {
         float dt = -1.0f;
 
 
+        Shader defaultShader = AssetPool.getShader("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/shaders/default.glsl");
+        Shader pickingShader = AssetPool.getShader("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/shaders/pickingShader.glsl");
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             glfwPollEvents();
+            
+            // Render pass 1. Render to picking texture
+            glDisable(GL_BLEND);
+            pickingTexture.enableWriting();
+            
+            glViewport(0, 0, 3840, 1080);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            
+
+            Renderer.bindShader(pickingShader);
+            currentScene.render();
+            
+            if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+            	int x = (int)MouseListener.getScreenX();
+            	int y = (int)MouseListener.getScreenY();
+            	System.out.println(pickingTexture.readPixel(x, y));
+            }
+            
+            pickingTexture.disableWriting();
+            glEnable(GL_BLEND);
+            
+            // Render pass 2. Render actual game
 
             DebugDraw.beginFrame();
             this.framebuffer.bind();
@@ -164,7 +188,9 @@ public class Window {
 
             if (dt >=0){
                 DebugDraw.draw();
+                Renderer.bindShader(defaultShader); 
                 currentScene.update(dt);
+                currentScene.render();
             }
             
             this.framebuffer.unbind();
