@@ -95,7 +95,7 @@ public class Shader {
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("Error: 'defaultShader.glsl'\n\t Fragment Shader Compilation failed.");
+            System.out.println("Error: 'defaultShader.glsl'\n\t Fragment Shader Compilation failed." + filepath);
             System.out.println(glGetShaderInfoLog(fragmentID, len));
             assert false : "";
 
@@ -111,7 +111,7 @@ public class Shader {
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int len = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
-            System.out.println("Error: 'defaultShader.glsl'\n\t Linking of shaders failed.");
+            System.out.println("Error: 'defaultShader.glsl'\n\t Linking of shaders failed."+ filepath);
             System.out.println(glGetProgramInfoLog(shaderProgramID, len));
             assert false : "";
         }

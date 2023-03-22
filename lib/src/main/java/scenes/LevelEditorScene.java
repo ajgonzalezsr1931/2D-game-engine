@@ -97,7 +97,11 @@ public class LevelEditorScene extends Scene{
             go.update(dt);
         }
 
-        this.renderer.render();
+        
+    }
+    @Override
+    public void render() {
+    	this.renderer.render();
     }
 
     @Override
@@ -139,9 +143,5 @@ public class LevelEditorScene extends Scene{
         ImGui.end();
     }
 
-	@Override
-	public void render() {
-		// TODO Auto-generated method stub
-		
-	}
+
 }
