@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,13 @@ public abstract class Scene {
 
         try {
             FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(this.gameObjects));
+            List<GameObject> objsToSerialize = new ArrayList<>();
+            for (GameObject obj : this.gameObjects){
+            	if (obj.doSerialization()) {
+            		objsToSerialize.add(obj);
+            	}
+            }
+            writer.write(gson.toJson(objsToSerialize));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

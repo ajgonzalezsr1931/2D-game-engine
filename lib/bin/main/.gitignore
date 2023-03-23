@@ -2,3 +2,6 @@
 /components/
 /scenes/
 /jade/
+/editor/
+/renderer/
+/TranslateGizmo.class
