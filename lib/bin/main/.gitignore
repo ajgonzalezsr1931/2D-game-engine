@@ -6,3 +6,7 @@
 /scenes/
 /util/
 /physics2d/
+/observers/
+/events/
+/EventSystem.class
+/EventType.class
