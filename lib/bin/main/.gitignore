@@ -1,7 +1,8 @@
-/util/
 /components/
-/scenes/
-/jade/
 /editor/
+/jade/
+/portfoliogame/
 /renderer/
-/TranslateGizmo.class
+/scenes/
+/util/
+/physics2d/
