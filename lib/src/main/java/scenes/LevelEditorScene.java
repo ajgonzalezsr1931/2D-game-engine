@@ -6,8 +6,10 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import components.EditorCamera;
+import components.GizmoSystem;
 import components.GridLines;
 import components.MouseControls;
+import components.ScaleGizmo;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
@@ -29,7 +31,7 @@ public class LevelEditorScene extends Scene{
     private Spritesheet sprites;
     SpriteRenderer obj1Sprite;
 
-    GameObject levelEditorStuff = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
 
     public LevelEditorScene() {
 
@@ -45,8 +47,8 @@ public class LevelEditorScene extends Scene{
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
         levelEditorStuff.addComponent(new EditorCamera(this.camera));
-        levelEditorStuff.addComponent(new TranslateGizmo(gizmos.getSprite(1),
-        		Window.getImGuiLayer().getPropertiesWindow()));
+        levelEditorStuff.addComponent(new GizmoSystem(gizmos));
+
         levelEditorStuff.start();
         
       
@@ -78,7 +80,7 @@ public class LevelEditorScene extends Scene{
                         16, 16, 81, 0));
         AssetPool.addSpritesheet("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/gizmos.png",
         		new Spritesheet(AssetPool.getTexture("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/gizmos.png"),
-        				24, 48, 2, 0));
+        				24, 48, 3, 0));
         AssetPool.getTexture("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/blendImage2.png");
         
         for (GameObject g : gameObjects) {
