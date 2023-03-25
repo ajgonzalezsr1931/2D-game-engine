@@ -74,4 +74,14 @@ public class Physics2D {
 			world.step(physicsTime, velocityIterations, positionIterations);
 		}
 	}
+	public void destroyGameObject(GameObject go) {
+		RigidBody2D rb = go.getComponent(RigidBody2D.class);
+		if (rb !=null) {
+			if (rb.getRawBody() != null) {
+				world.destroyBody(rb.getRawBody());
+				rb.setRawBody(null);
+			}
+		}
+		
+	}
 }

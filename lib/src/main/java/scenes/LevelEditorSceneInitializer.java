@@ -25,54 +25,35 @@ import util.AssetPool;
 import imgui.ImGui;
 import imgui.ImVec2;
 
-public class LevelEditorScene extends Scene{
+public class LevelEditorSceneInitializer extends SceneInitializer{
 
     // private GameObject obj1;
     private Spritesheet sprites;
     SpriteRenderer obj1Sprite;
 
-    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
+    private GameObject levelEditorStuff;
 
-    public LevelEditorScene() {
+    public LevelEditorSceneInitializer() {
 
     }
 
     @Override
-    public void init() {
-    	loadResources();
+    public void init(Scene scene) {
         sprites = AssetPool.getSpritesheet("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/spritesheets/decorationsAndBlocks.png");
         Spritesheet gizmos = AssetPool.getSpritesheet("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/gizmos.png");
         
-        this.camera = new Camera(new Vector2f(-250, 0));
+        levelEditorStuff = scene.createGameObject("LevelEditor");
+        levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
-        levelEditorStuff.addComponent(new EditorCamera(this.camera));
+        levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
+        scene.addGameObjectToScene(levelEditorStuff);
 
-        levelEditorStuff.start();
-        
-      
-
-        // obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100),
-        // new Vector2f(256, 256)), 2);
-        // obj1Sprite = new SpriteRenderer();
-        // obj1Sprite.setColor(new Vector4f(1, 0, 0, 1));
-        // obj1.addComponent(obj1Sprite);
-        // // obj1.addComponent(new Rigidbody());
-        // this.addGameObjectToScene(obj1);
-        // this.activeGameObject = obj1;
-        
-        // GameObject obj2 = new GameObject("Object 2",
-        // new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
-        // SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-        // Sprite obj2Sprite = new Sprite();
-        // obj2Sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"));
-        // obj2SpriteRenderer.setSprite(obj2Sprite);
-        // obj2.addComponent(obj2SpriteRenderer);
-        // this.addGameObjectToScene(obj2);
     }
-
-    private void loadResources() {
+    
+    @Override
+    public void loadResources(Scene scene) {
         AssetPool.getShader("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/shaders/default.glsl");
 
         AssetPool.addSpritesheet("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/spritesheets/decorationsAndBlocks.png",
@@ -83,7 +64,7 @@ public class LevelEditorScene extends Scene{
         				24, 48, 3, 0));
         AssetPool.getTexture("/media/anthony/Enterprise/projects/portfolioGame/lib/assets/images/blendImage2.png");
         
-        for (GameObject g : gameObjects) {
+        for (GameObject g : scene.getGameObjects()) {
 			if (g.getComponent(SpriteRenderer.class) != null) {
 				SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
 				if (spr.getTexture() != null) {
@@ -95,21 +76,6 @@ public class LevelEditorScene extends Scene{
     }
 
     
-    @Override
-    public void update(float dt) {
-        levelEditorStuff.update(dt);
-        this.camera.adjustProjection();
-
-        for (GameObject go : this.gameObjects) {
-            go.update(dt);
-        }
-
-        
-    }
-    @Override
-    public void render() {
-    	this.renderer.render();
-    }
 
     @Override
     public void imgui() {
@@ -154,6 +120,5 @@ public class LevelEditorScene extends Scene{
 
         ImGui.end();
     }
-
 
 }
