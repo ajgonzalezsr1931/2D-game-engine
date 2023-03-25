@@ -1,12 +1,6 @@
-/components/
-/editor/
-/jade/
-/portfoliogame/
-/renderer/
 /scenes/
-/util/
+/jade/
+/components/
 /physics2d/
-/observers/
-/events/
-/EventSystem.class
-/EventType.class
+/renderer/
+/editor/
