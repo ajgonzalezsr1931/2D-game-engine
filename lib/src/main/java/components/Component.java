@@ -2,6 +2,7 @@ package components;
 
 
 import imgui.ImGui;
+import imgui.type.ImInt;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -75,10 +76,14 @@ public abstract class Component {
                     }
                 } else if (type == Vector4f.class) {
                     Vector4f val = (Vector4f) value;
-                    float[] imVec = { val.x, val.y, val.z, val.w };
-                    if (ImGui.dragFloat4(name + ": ", imVec)) {
-                        val.set(imVec[0], imVec[1], imVec[2], imVec[3]);
-                    }
+                    JImGui.colorPicker4(name, val);
+                } else if (type.isEnum()) {
+                	String[] enumValues = getEnumValues(type);
+                	String enumType = ((Enum)value).name();
+                	ImInt index = new ImInt(indexOf(enumType, enumValues));
+                	if (ImGui.combo(field.getName(), index, enumValues, enumValues.length)) {
+                		field.set(this, type.getEnumConstants()[index.get()]);
+                	}
                 }
 
                 if (isPrivate) {
@@ -90,7 +95,26 @@ public abstract class Component {
         }
     }
 
-    public void generateId(){
+    private int indexOf(String str, String[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			if (str.equals(arr[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private <T extends Enum<T>> String[] getEnumValues(Class<?> type) {
+		String[] enumValues = new String[type.getEnumConstants().length];
+		int i = 0;
+		for (Object enumIntegerValue : type.getEnumConstants()) {
+			enumValues[i] = ((Enum) enumIntegerValue).name();
+			i++;
+		}
+		return enumValues;
+	}
+
+	public void generateId(){
         if (this.uid == -1){
             this.uid = ID_COUNTER++;
         }
